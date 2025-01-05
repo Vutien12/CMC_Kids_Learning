@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+        }
+
+        .nav-link {
+            color: black;
+            font-size: 14px;
+            margin-right: 30px;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            color: #ff4d4d;
+        }
+
+        .phone-number {
+            color: #ff4d4d;
+            font-weight: bold;
+            margin-right: 20px;
+            font-size: 14px;
+        }
+
+        .login {
+            color: #007bff;
+        }
+
+        .logo-img {
+            height: 40px;
+        }
+
+        .logout-button {
+            display: none;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section h2 {
+            text-align: center;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .submit-button {
+            background-color: #ff4d4d;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            background-color: #ff3333;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-white py-2">
+        <div class="container">
+            <a class="navbar-brand" href="Home.html">
+                <img src="../Images/logonew.png" alt="Logo" class="logo-img">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="Home.html">TRANG CHỦ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Blog.html">BLOG</a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="phone-number"><i class="bi bi-telephone"></i> 0903.961.472</span>
+                    </li>
+                    <li class="nav-item login-container">
+                        <a class="nav-link login" href="Login.html" id="loginLink"><i class="bi bi-person-circle"></i>
+                            Đăng nhập</a>
+                        <button id="logoutButton" class="logout-button">Đăng xuất</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <hr style="border: 1px solid #ddd; margin: 0 50px;">
+
+    <section class="form-section">
+        <h2>Thanh Toán</h2>
+        <form id="paymentForm">
+            <div class="mb-3">
+                <label for="amount" class="form-label">Số Tiền Thanh Toán</label>
+                <input type="text" class="form-control" id="amount" name="amount" readonly>
+            </div>
+        </form>
+        <div class="qr-section" id="qrSection">
+            <h4>Mã QR của bạn</h4>
+            <div id="qrcode"></div>
+        </div>
+        <div id="paypal-button-container"></div>
+    </section>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AXfS8aA3XpAxA5f9YUk1qEKoAcblWPZmwYz8zcOoU7LGwg5FicoFgwlFjhX28OL3M2DZV6NhddHWlH6V&currency=USD"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const amount = localStorage.getItem('selectedCoursePrice') || "0";
+            document.getElementById('amount').value = `${amount} VND`;
+            generateQRCode(amount);
+        });
+
+        function generateQRCode(amount) {
+            amount = amount.replace(/[^\d]/g, ''); // Chỉ lấy số
+            if (amount) {
+                document.getElementById('qrcode').innerHTML = "";
+
+                const paypalLink = `https://www.paypal.com/paypalme/yourPayPalUsername/${(amount / 23000).toFixed(2)}`;
+                new QRCode(document.getElementById("qrcode"), {
+                    text: paypalLink,
+                    width: 250,
+                    height: 250
+                });
+
+                console.log("Generated PayPal Link:", paypalLink);
+            } else {
+                alert("Số tiền không hợp lệ. Vui lòng kiểm tra lại.");
+            }
+        }
+
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                const amount = document.getElementById('amount').value.replace(/[^\d]/g, '');
+                return actions.order.create({
+                    purchase_units: [{ amount: { value: (amount / 23000).toFixed(2) } }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    alert('Thanh toán thành công bởi ' + details.payer.name.given_name);
+                    localStorage.setItem('isPaymentComplete', 'true');
+                    window.location.href = 'Home.html';
+                });
+            },
+            onError: function (err) {
+                console.error(err);
+                alert('Có lỗi xảy ra khi thanh toán.');
+            }
+        }).render('#paypal-button-container');
+    </script>
+
+    <iframe id="footer-iframe" src="footer.html" style="width: 100%; border: none;" scrolling="no"></iframe>
+
+    <script src="../js/logout.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+4

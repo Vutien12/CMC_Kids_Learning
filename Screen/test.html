@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm tài khoản người dùng</title>
+    <style>
+        .form-container {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .form-container input, .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Thêm tài khoản người dùng</h2>
+        <form id="userForm">
+            <label for="username">Tên đăng nhập:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Mật khẩu:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="name">Tên người dùng:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="telephone">Số điện thoại:</label>
+            <input type="text" id="telephone" name="telephone">
+
+            <label for="disabled">Vô hiệu hóa:</label>
+            <input type="checkbox" id="disabled" name="disabled">
+
+            <button type="submit">Thêm tài khoản</button>
+        </form>
+        <p id="error-message" class="error-message"></p>
+    </div>
+
+    <script>
+        document.getElementById('userForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const telephone = document.getElementById('telephone').value.trim();
+            const disabled = document.getElementById('disabled').checked; // Lấy giá trị của checkbox
+
+            // Kiểm tra các trường bắt buộc
+            if (!username || !password || !email || !name) {
+                document.getElementById('error-message').innerText = 'Tất cả các trường bắt buộc phải được điền.';
+                return;
+            }
+
+            const newUser = {
+                username: username,
+                password: password,
+                email: email,
+                name: name,
+                telephone: telephone || null,
+                disabled: disabled // Gửi giá trị disabled từ checkbox
+            };
+
+            fetch('https://localhost:7132/api/AppUser/insert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newUser)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.data) {
+                    alert('Thêm tài khoản thành công!');
+                    document.getElementById('userForm').reset();
+                } else {
+                    document.getElementById('error-message').innerText = 'Lỗi thêm tài khoản, vui lòng thử lại.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('error-message').innerText = 'Có lỗi xảy ra. Vui lòng thử lại.';
+            });
+        });
+    </script>
+</body>
+</html>

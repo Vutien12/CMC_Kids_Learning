@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Bài Tập</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+  </style>
+</head>
+<body>
+  <h1>Quản Lý Bài Tập</h1>
+
+  <div>
+    <h2>Thêm/Sửa Bài Tập</h2>
+    <form id="assignmentForm">
+      <input type="hidden" id="assignmentId">
+      
+      <label for="courseId">Khóa học:</label>
+      <select id="courseId"></select><br>
+
+      <label for="title">Tiêu đề:</label>
+      <input type="text" id="title" required><br>
+
+      <label for="content">Nội dung:</label>
+      <textarea id="content" required></textarea><br>
+
+      <label for="assignedDate">Ngày giao:</label>
+      <input type="date" id="assignedDate" required><br>
+
+      <label for="dueDate">Hạn nộp:</label>
+      <input type="date" id="dueDate" required><br>
+
+      <button type="submit">Lưu</button>
+    </form>
+  </div>
+
+  <div>
+    <h2>Tìm kiếm bài tập</h2>
+    <input type="text" id="searchTitle" placeholder="Nhập tiêu đề">
+    <button id="searchBtn">Tìm kiếm</button>
+  </div>
+
+  <div>
+    <h2>Danh sách Bài Tập</h2>
+    <table id="assignmentTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Khóa học</th>
+          <th>Tiêu đề</th>
+          <th>Nội dung</th>
+          <th>Ngày giao</th>
+          <th>Hạn nộp</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const listApiUrl = "https://localhost:7132/api/Assignment/list";
+    const insertApiUrl = "https://localhost:7132/api/Assignment/insert";
+    const updateApiUrl = "https://localhost:7132/api/Assignment/update";
+    const deleteApiUrl = "https://localhost:7132/api/Assignment/delete";
+    const coursesApiUrl = "https://localhost:7132/api/Course/list";
+
+    let coursesCache = []; // Lưu trữ danh sách khóa học
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadCourses();
+        loadAssignments();
+
+        document.getElementById("assignmentForm").addEventListener("submit", handleFormSubmit);
+        document.getElementById("searchBtn").addEventListener("click", searchAssignments);
+    });
+
+    async function loadCourses() {
+        try {
+            const response = await fetch(coursesApiUrl);
+            const data = await response.json();
+
+            coursesCache = data.data.$values; // Cập nhật danh sách khóa học
+
+            const courseSelect = document.getElementById("courseId");
+            courseSelect.innerHTML = "";
+
+            coursesCache.forEach(course => {
+                const option = document.createElement("option");
+                option.value = course.id;
+                option.textContent = course.name;
+                courseSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error loading courses:", error);
+        }
+    }
+
+    async function loadAssignments() {
+        try {
+            const response = await fetch(listApiUrl);
+            const data = await response.json();
+
+            if (data && data.data && data.data.$values) {
+                renderAssignments(data.data.$values);
+            } else {
+                console.error("Không tìm thấy dữ liệu bài tập");
+            }
+        } catch (error) {
+            console.error("Error loading assignments:", error);
+        }
+    }
+
+    function renderAssignments(assignments) {
+        const tableBody = document.getElementById("assignmentTable").querySelector("tbody");
+        tableBody.innerHTML = "";
+
+        assignments.forEach((assignment) => {
+            const course = coursesCache.find(c => c.id === assignment.courseId);
+            const courseName = course ? course.name : "N/A";
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${assignment.id}</td>
+                <td>${courseName}</td>
+                <td>${assignment.title}</td>
+                <td>${assignment.content}</td>
+                <td>${new Date(assignment.assignedDate).toLocaleDateString()}</td>
+                <td>${new Date(assignment.dueDate).toLocaleDateString()}</td>
+                <td>
+                    <button onclick="editAssignment(${assignment.id})">Sửa</button>
+                    <button onclick="deleteAssignment(${assignment.id})">Xóa</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        const id = document.getElementById("assignmentId").value;
+        const assignment = {
+            courseId: document.getElementById("courseId").value,
+            title: document.getElementById("title").value,
+            content: document.getElementById("content").value,
+            assignedDate: document.getElementById("assignedDate").value,
+            dueDate: document.getElementById("dueDate").value,
+        };
+
+        if (id) {
+            updateAssignment(id, assignment);
+        } else {
+            addAssignment(assignment);
+        }
+    }
+
+    async function addAssignment(assignment) {
+        try {
+            await fetch(insertApiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(assignment),
+            });
+            loadAssignments();
+        } catch (error) {
+            console.error("Error adding assignment:", error);
+        }
+    }
+
+    async function updateAssignment(id, assignment) {
+        try {
+            await fetch(updateApiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, ...assignment }),
+            });
+            loadAssignments();
+        } catch (error) {
+            console.error("Error updating assignment:", error);
+        }
+    }
+
+    async function deleteAssignment(id) {
+        try {
+            await fetch(`${deleteApiUrl}?id=${id}`, { method: "DELETE" });
+            loadAssignments();
+        } catch (error) {
+            console.error("Error deleting assignment:", error);
+        }
+    }
+
+    function editAssignment(id) {
+        fetch(listApiUrl)
+            .then((response) => response.json())
+            .then((data) => {
+                const assignment = data.data.$values.find((a) => a.id === id);
+                document.getElementById("assignmentId").value = assignment.id;
+                document.getElementById("courseId").value = assignment.courseId;
+                document.getElementById("title").value = assignment.title;
+                document.getElementById("content").value = assignment.content;
+                document.getElementById("assignedDate").value = assignment.assignedDate.split("T")[0];
+                document.getElementById("dueDate").value = assignment.dueDate.split("T")[0];
+            });
+    }
+
+    function searchAssignments() {
+        const searchTitle = document.getElementById("searchTitle").value.toLowerCase();
+        fetch(listApiUrl)
+            .then((response) => response.json())
+            .then((data) => {
+                const filteredAssignments = data.data.$values.filter((assignment) =>
+                    assignment.title.toLowerCase().includes(searchTitle)
+                );
+                renderAssignments(filteredAssignments);
+            });
+    }
+  </script>
+</body>
+</html>

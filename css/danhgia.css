@@ -1,0 +1,72 @@
+.header {
+    background-color: #FFD54F;
+    padding: 50px 0;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+  }
+  /* Thiết lập khung chứa các ô đánh giá */
+  .reviews-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: #FFD54F;
+    padding: 40px 0;
+  }
+  /* Thiết kế từng ô đánh giá với nền trắng, bo góc, và đổ bóng */
+  .review-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    padding: 20px;
+    width: 300px;
+    text-align: left;
+    position: relative;
+  }
+  /* Thiết lập ảnh đại diện trong ô đánh giá */
+  .profile-picture {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 3px solid white;
+  }
+  /* Kiểu chữ cho tên người dùng */
+  .name {
+    font-weight: bold;
+    margin-top: 35px;
+    text-align: center;
+  }
+  /* Kiểu chữ cho nội dung đánh giá */
+  .reviewText {
+    margin-top: 10px;
+    color: #555;
+  }
+  /* Khung chứa các chấm trắng chuyển trang */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  /* Thiết lập cho từng chấm trắng chuyển trang */
+  .dot {
+    height: 12px;
+    width: 12px;
+    margin: 0 5px;
+    background-color: #ddd;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  /* Chấm trắng chuyển trang được chọn */
+  .dot.active {
+    background-color: #333;
+  }

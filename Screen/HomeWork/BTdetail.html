@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+        }
+        .nav-link {
+            color: black;
+            font-size: 14px;
+            margin-right: 30px;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            color: #ff4d4d;
+        }
+        .phone-number {
+            color: #ff4d4d;
+            font-weight: bold;
+            margin-right: 20px;
+            font-size: 14px;
+        }
+        .login {
+            color: #007bff;
+        }
+        .logo-img {
+            height: 40px;
+        }
+        .logout-button {
+            display: none;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .login-container {
+            display: flex;
+            align-items: center;
+        }
+        .exercise-section {
+            padding: 50px;
+            text-align: center;
+        }
+        .exercise-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        .exercise-instruction {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .number-input {
+            width: 50px;
+            text-align: center;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .submit-button {
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+        .score-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+        .score-modal h3 {
+            font-size: 24px;
+            color: #007bff;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+        .modal-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-while py-2">
+    <div class="container">
+        <a class="navbar-brand" href="../Home.html">
+            <img src="../../Images/logonew.png" alt="Logo" class="logo-img">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">TRANG CHỦ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">BLOG</a>
+                </li>
+                <li class="nav-item">
+                    <span class="phone-number"><i class="bi bi-telephone"></i> 0903.961.472</span>
+                </li>
+                <li class="nav-item login-container">
+                    <a class="nav-link login" href="../Login.html" id="loginLink"><i class="bi bi-person-circle"></i> Đăng nhập</a>
+                    <button id="logoutButton" class="logout-button">Đăng xuất</button>
+                </li> 
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Exercise Section -->
+<section class="exercise-section">
+    <h2 class="exercise-title">Bài Tập: Điền Các Số Từ 1 Đến 10</h2>
+    <p class="exercise-instruction">Hãy nhập các số từ 1 đến 10 vào các ô bên dưới và nhấn "Submit".</p>
+    
+    <form id="exerciseForm" onsubmit="return calculateScore()">
+        <div>
+            <input type="text" class="number-input" id="num1" placeholder="1">
+            <input type="text" class="number-input" id="num2" placeholder="2">
+            <input type="text" class="number-input" id="num3" placeholder="3">
+            <input type="text" class="number-input" id="num4" placeholder="4">
+            <input type="text" class="number-input" id="num5" placeholder="5">
+            <input type="text" class="number-input" id="num6" placeholder="6">
+            <input type="text" class="number-input" id="num7" placeholder="7">
+            <input type="text" class="number-input" id="num8" placeholder="8">
+            <input type="text" class="number-input" id="num9" placeholder="9">
+            <input type="text" class="number-input" id="num10" placeholder="10">
+        </div>
+        <button type="submit" class="submit-button">Submit</button>
+    </form>
+</section>
+
+<!-- Modal for displaying score -->
+<div class="modal-overlay" id="modalOverlay"></div>
+<div class="score-modal" id="scoreModal">
+    <h3 id="scoreMessage"></h3>
+    <button class="modal-button" onclick="redirectToPage()">Đồng ý</button>
+</div>
+
+<!-- Nhúng footer bằng iframe -->
+<iframe id="footer-iframe" src="../footer.html" style="width: 100%; border: none;" scrolling="no"></iframe>
+
+<!-- Bootstrap Script -->
+<script src="../../js/logout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function calculateScore() {
+        const correctAnswers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+        let score = 10;
+
+        for (let i = 1; i <= 10; i++) {
+            const userAnswer = document.getElementById('num' + i).value.trim();
+            if (userAnswer !== correctAnswers[i - 1]) {
+                score--;
+            }
+        }
+
+        document.getElementById('scoreMessage').innerText = 'Bạn đạt ' + score + ' điểm!';
+        showModal();
+        return false; // Ngăn form gửi dữ liệu và reload trang
+    }
+
+    function showModal() {
+        document.getElementById('modalOverlay').style.display = 'block';
+        document.getElementById('scoreModal').style.display = 'block';
+    }
+
+    function redirectToPage() {
+        window.location.href = '../ToanNC.html';
+    }
+</script>
+
+</body>
+</html>

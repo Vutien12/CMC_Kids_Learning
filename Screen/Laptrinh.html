@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lập trình Scratch cơ bản</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Global font styling */
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+        }
+        /* Navbar styling */
+        .nav-link {
+            color: black;
+            font-size: 14px;
+            margin-right: 30px;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            color: #ff4d4d;
+        }
+        .phone-number {
+            color: #ff4d4d;
+            font-weight: bold;
+            margin-right: 20px;
+            font-size: 14px;
+        }
+        .login {
+            color: #007bff;
+        }
+        .logo-img {
+            height: 40px;
+        }
+        .logout-button {
+            display: none; /* Hidden by default */
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px; /* Spacing between login and logout */
+        }
+        .login-container {
+            display: flex;
+            align-items: center;
+        }
+        /* Course title section */
+        .course-title-section {
+            background-color: #007bff;
+            padding: 30px 0;
+            text-align: center;
+            color: white;
+        }
+        .course-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+        }
+        /* Course introduction section */
+        .course-intro-section {
+            padding: 50px;
+            background-color: white;
+        }
+        .course-content {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 30px;
+            max-width: 100%;
+        }
+        /* Course card styling */
+        .course-card {
+            width: 25%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            background-color: #ffffff;
+        }
+        .course-card .course-image {
+            background-color: #12B3F7;
+            padding: 20px;
+        }
+        .course-card .course-image img {
+            width: 90%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .card-course-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+            color: #333;
+        }
+        .price-section {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #888;
+            font-size: 14px;
+        }
+        .discounted-price {
+            color: #ff4d4d;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .register-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ff4d4d;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 15px;
+        }
+        .register-button:hover {
+            background-color: #ff3333;
+            text-decoration: none;
+        }
+        /* Course details styling */
+        .course-details {
+            width: 65%;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 5px solid #007bff;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .course-details ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-top: 15px;
+        }
+        .course-details ul li {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        /* Styles for the Lesson Content Section */
+        .lesson-section {
+            margin-top: 20px;
+        }
+        .lesson-header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 5px 5px 0 0;
+        }
+        .accordion-button {
+            background-color: #e0f0ff;
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+        }
+        .accordion-button:not(.collapsed) {
+            color: #007bff;
+            background-color: #d6e4f5;
+        }
+        .free-label {
+            color: red;
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+        .lesson-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            font-size: 16px;
+            color: #0042A1;
+        }
+        .lesson-item {
+            padding: 10px 0; /* Khoảng cách trên và dưới cho các mục */
+            border-bottom: 1px solid #ddd; /* Đường viền dưới */
+        }
+                .lesson-item:last-child {
+            border-bottom: none; /* Xóa đường viền cho mục cuối cùng */
+        }
+        .lesson-item i {
+            color: #ff4d4d;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        /* VIP Modal styling */
+        .vip-modal .modal-body {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .vip-modal .modal-body img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+        .vip-modal .upgrade-button {
+            background-color: #ffcc00;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin-top: 20px;
+        }
+                @media (max-width: 768px) {
+            .course-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            .course-card, .course-details {
+                width: 90%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-white py-2">
+    <div class="container">
+        <a class="navbar-brand" href="Home.html">
+            <img src="../Images/logonew.png" alt="Logo" class="logo-img">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="Home.html">TRANG CHỦ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Blog.html">BLOG</a>
+                </li>
+                <li class="nav-item">
+                    <span class="phone-number"><i class="bi bi-telephone"></i> 0903.961.472</span>
+                </li>
+                <li class="nav-item login-container">
+                    <a class="nav-link login" href="Login.html" id="loginLink"><i class="bi bi-person-circle"></i> Đăng nhập</a>
+                    <button id="logoutButton" class="logout-button">Đăng xuất</button>
+                </li> 
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Course Title Section -->
+<section class="course-title-section">
+    <h1 class="course-title">Lập trình Scratch cơ bản</h1>
+</section>
+
+<!-- Course Introduction Section -->
+<section class="course-intro-section">
+    <div class="course-content">
+        <!-- Course Card Section -->
+        <div class="course-card">
+            <!-- Image Section -->
+            <div class="course-image">
+                <img src="../Images/Ltrinh.jpg" alt="Course Image">
+            </div>
+            <!-- Title Section -->
+            <div class="card-course-title">Lập trình Scratch cơ bản</div>
+            <!-- Price Section -->
+            <div class="price-section">
+                <span class="original-price">700.000đ</span>
+                <span class="discounted-price">399.000đ</span>
+            </div>
+            <!-- Registration Button -->
+            <a href="Dangky.html" class="register-button" onclick="storeCourseInfo('Lập trình Scratch cơ bản', '399.000đ')">ĐĂNG KÝ NGAY</a>
+        </div>
+        
+        <!-- Course Details Section -->
+        <div class="course-details">
+            <h2 class="section-title">Giới thiệu khóa học</h2>
+            <ul>
+                <li><strong>Lập trình</strong> giúp các em hình thành tinh thần học hỏi rèn luyện tính tự học và tư duy độc lập thông qua việc biết cách tìm kiếm và sàn lọc thông tin, giúp trẻ phát triển về mặt kiến thức lẫn kỹ năng.</li>
+                <li><strong> Khoá học thiết kế chi tiết</strong> và hướng dẫn rõ ràng từng bước một, dùng những ví dụ trực quan để các hiểu bản chất của lập trình, khối lệnh để có tư duy logic.</li>
+                <li><strong>Phương pháp dạy học:  VSA (Visual - Self Practice - Assesments)</strong> nghĩa là <strong>(Trực quan - Tự luyện tập - Chấm điểm đánh giá).</strong> Bài giảng sử dụng hình ảnh trực quan sinh động từ cuộc sống  vào bài học để các con cảm thấy gần gũi, nhớ lâu âm - vần bằng hình ảnh. Sau mỗi video đều có câu hỏi tự luyện tập để kiểm tra mức độ hiểu bài và kèm 10 câu hỏi củng cố để các con có thể tự đánh giá năng lực của chính mình. </li>
+                <li><strong>Kho đề thi và tài liệu</strong> ôn tập đa dạng, thiết kế hình ảnh cuốn hút. </li>
+                <li><strong>Học bạ điện tử:</strong> Giúp phụ huynh theo dõi quá trình và kết quả học tập của con.</li>
+                <li>Luôn có <strong>thầy cô chuyên môn hỗ trợ 1:1</strong> khi tham gia khóa học cho đến khi hiểu bài.</li>
+            </ul>
+
+            <!-- Course Content Section -->
+            <h2 class="section-title">Nội dung khóa học</h2>
+            
+            <!-- Lesson Content Section -->
+            <div class="lesson-section">
+                <div class="lesson-header">
+                    Mở đầu
+                </div>
+                <div class="accordion" id="lessonAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Giới thiệu
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#lessonAccordion">
+                            <div class="accordion-body">
+                                <div class="lesson-item">
+                                    <span>• Lập trình Scratch <img src="https://kids.hoc247.vn/assets/images/lpnew/cbd_free.svg" alt="Free" class="free-label" style="width: 30px; height: 25px;"></span>
+                                    <span>
+                                        <img src="../Images/Play.svg" alt="Play" data-bs-toggle="modal" data-bs-target="#videoModal" data-video="https://cdn2.hoc247.vn/2021/20210712/1280x720/iFSxJt5oqKta0xbLTpF3pF56ltupP474awGWqS1j.mp4" style="cursor: pointer; width: 25px; height: 25px;">
+                                        <img src="../Images/checklist.svg" alt="Checklist" style="width: 25px; height: 25px; cursor: pointer;" onclick="redirectToExercises('TOÁN NÂNG CAO LỚP 1')">
+
+                                    </span>
+                                </div>
+                                <div class="lesson-item">
+                                    <span>• Môi trường Scratch <img src="https://kids.hoc247.vn/assets/images/lpnew/cbd_free.svg" alt="Free" class="free-label" style="width: 30px; height: 25px;"></span>
+                                    <span>
+                                        <img src="../Images/Play.svg" alt="Play" data-bs-toggle="modal" data-bs-target="#videoModal" data-video="https://cdn2.hoc247.vn/2021/20210712/1280x720/xnvfzEhYwG3xFWPRsmnvgqZShyvLHn9UzwALdcUg.mp4" style="cursor: pointer; width: 25px; height: 25px;">
+                                        <img src="../Images/checklist.svg" alt="Checklist" style="width: 25px; height: 25px; cursor: pointer;">
+                                    </span>
+                                </div>
+                                <div class="lesson-item">
+                                    <span>• Bài tập củng cố</span>
+                                    <span>
+                                        <img src="../Images/Play.svg" alt="Play" data-bs-toggle="modal" data-bs-target="#vipModal" data-video="https://cdn2.hoc247.vn/2021/20210718/1280x720/UdDYHbb91Te1s4U559IcQzD3MSIv4DSxm0sfWfgq.mp4" style="cursor: pointer; width: 25px; height: 25px;">
+                                        <img src="../Images/checklist.svg" alt="Checklist" style="width: 25px; height: 25px; cursor: pointer;">
+                                    </span>
+                                </div>                                                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New Lesson Group -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Scratch
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#lessonAccordion">
+                            <div class="accordion-body">
+                                <div class="lesson-item">
+                                    <span>• Giới thiệu <img src="https://kids.hoc247.vn/assets/images/lpnew/cbd_free.svg" alt="Free" class="free-label" style="width: 30px; height: 25px;"></span>
+                                    <span>
+                                        <img src="../Images/Play.svg" alt="Play" data-bs-toggle="modal" data-bs-target="#videoModal" data-video="https://cdn2.hoc247.vn/2021/20210712/1280x720/VsoYstp3heusxp8B6l9Y6nnQK74PuTvJG18DO05n.mp4" style="cursor: pointer; width: 25px; height: 25px;">
+                                        <img src="../Images/checklist.svg" alt="Checklist" style="width: 25px; height: 25px; cursor: pointer;">
+                                    </span>
+                                </div>
+                                <div class="lesson-item">
+                                    <span>• Các khối lập trình </span>
+                                    <span>
+                                        <img src="../Images/Play.svg" alt="Play" data-bs-toggle="modal" data-bs-target="#vipModal" data-video="https://cdn2.hoc247.vn/2021/20210712/1280x720/2bTw5OMzoqPCvi8hM8XLFD9cHBXuP1LLBLrQjHBo.mp4" style="cursor: pointer; width: 25px; height: 25px;">
+                                        <img src="../Images/checklist.svg" alt="Checklist" style="width: 25px; height: 25px; cursor: pointer;">
+                                    </span>
+                                </div>
+                                <div class="lesson-item">
+                                    <span>• Bài tập củng cố</span>
+                                    <span>
+                                        <img src="../Images/checklist.svg" alt="Checklist" style="width: 25px; height: 25px; cursor: pointer;">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Lesson Content Section -->
+        </div>
+    </div>
+</section>
+
+<!-- Video Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel">Video bài học</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ratio ratio-16x9">
+                    <iframe id="videoFrame" src="" title="Video bài học" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VIP Upgrade Modal -->
+<div class="modal fade vip-modal" id="vipModal" tabindex="-1" aria-labelledby="vipModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="https://kids.hoc247.vn/assets/images/lpnew/padlock.png" alt="Lock Icon">
+                <p class="text-primary fw-bold">Nâng cấp tài khoản VIP<br>Để có thể xem được nội dung này</p>
+                <button class="btn upgrade-button" onclick="window.location.href='Dangky.html'">NÂNG CẤP NGAY</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nhúng footer bằng iframe -->
+<iframe id="footer-iframe" src="footer.html" style="width: 100%; border: none;" scrolling="no"></iframe>
+
+<script>
+    // Hàm lưu trữ thông tin khóa học vào localStorage khi nhấn "Đăng Ký Ngay"
+    function storeCourseInfo(courseName, price) {
+        localStorage.setItem('selectedCourseName', courseName);
+        localStorage.setItem('selectedCoursePrice', price);
+        localStorage.setItem('isPaymentComplete', 'false'); // Đặt trạng thái chưa thanh toán
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const videoModal = document.getElementById('videoModal');
+        const videoFrame = document.getElementById('videoFrame');
+
+        videoModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const videoUrl = button.getAttribute('data-video');
+            videoFrame.src = videoUrl;
+        });
+
+        videoModal.addEventListener('hide.bs.modal', function() {
+            videoFrame.src = "";
+        });
+        // Kiểm tra trạng thái thanh toán từ localStorage
+        const isPaymentComplete = localStorage.getItem('isPaymentComplete') === 'true';
+
+        // Tìm bài học bị khóa và xác định hành động dựa trên trạng thái thanh toán
+        const lockedLesson = document.querySelector('.lesson-item[data-lesson="locked"]');
+        if (isPaymentComplete) {
+            // Nếu đã thanh toán, mở khóa bài học bằng cách đặt video modal
+            lockedLesson.querySelector('.play-icon').dataset.bsTarget = '#videoModal';
+            lockedLesson.querySelector('.play-icon').setAttribute('data-video');
+        } else {
+            // Nếu chưa thanh toán, giữ lại VIP modal
+            lockedLesson.querySelector('.play-icon').dataset.bsTarget = '#vipModal';
+        }
+
+        // Sự kiện để mở video modal và tải video
+        videoModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const videoUrl = button.getAttribute('data-video');
+            videoFrame.src = videoUrl;
+        });
+
+        // Sự kiện để xóa video khi đóng modal
+        videoModal.addEventListener('hide.bs.modal', function() {
+            videoFrame.src = "";
+        });
+    });
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        const isPaymentComplete = localStorage.getItem('isPaymentComplete');
+
+        if (isPaymentComplete === 'true') {
+            // Thay thế liên kết VIP để mở video trực tiếp
+            const vipItems = document.querySelectorAll("[data-bs-target='#vipModal']");
+
+            vipItems.forEach(item => {
+                const videoUrl = item.getAttribute('data-video');
+                item.setAttribute('data-bs-target', '#videoModal');
+                item.addEventListener('click', (e) => {
+                    document.getElementById('videoFrame').src = videoUrl;
+                });
+            });
+        }
+    });
+</script>
+
+<!-- Bootstrap Script -->
+<script src="../js/logout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+        }
+        .nav-link {
+            color: black;
+            font-size: 14px;
+            margin-right: 30px;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            color: #ff4d4d;
+        }
+        .phone-number {
+            color: #ff4d4d;
+            font-weight: bold;
+            margin-right: 20px;
+            font-size: 14px;
+        }
+        .login {
+            color: #007bff;
+        }
+        .logo-img {
+            height: 40px;
+        }
+        .logout-button {
+            display: none;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .login-container {
+            display: flex;
+            align-items: center;
+        }
+        .exercise-section {
+            padding: 50px;
+            text-align: center;
+        }
+        .exercise-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+        .assignment-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .assignment-card h3 {
+            margin-top: 0;
+            color: #007bff;
+            font-size: 20px;
+        }
+        .assignment-card p {
+            font-size: 16px;
+            color: #333;
+            margin: 10px 0;
+        }
+        .assignment-card small {
+            display: block;
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+        .assignment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-white py-2">
+    <div class="container">
+        <a class="navbar-brand" href="Home.html">
+            <img src="../Images/logonew.png" alt="Logo" class="logo-img">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">TRANG CHỦ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Blog.html">BLOG</a>
+                </li>
+                <li class="nav-item">
+                    <span class="phone-number"><i class="bi bi-telephone"></i> 0903.961.472</span>
+                </li>
+                <li class="nav-item login-container">
+                    <a class="nav-link login" href="Login.html" id="loginLink"><i class="bi bi-person-circle"></i> Đăng nhập</a>
+                    <button id="logoutButton" class="logout-button">Đăng xuất</button>
+                </li> 
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="exercise-section">
+    <h1 class="exercise-title">Danh sách bài tập</h1>
+    <div id="assignmentsContainer" class="container"></div>
+</div>
+
+<!-- Nhúng footer bằng iframe -->
+<iframe id="footer-iframe" src="footer.html" style="width: 100%; border: none;" scrolling="no"></iframe>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const assignmentApiUrl = 'https://localhost:7132/api/Assignment/list';
+        const assignmentsContainer = document.getElementById('assignmentsContainer');
+        const targetCourseId = 2;
+
+        // Hàm fetch dữ liệu từ API
+        async function fetchData(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                return data.data.$values;
+            } catch (error) {
+                console.error('Lỗi khi fetch dữ liệu:', error);
+                return [];
+            }
+        }
+
+        // Hàm render bài tập
+        async function renderAssignments() {
+            const assignments = await fetchData(assignmentApiUrl);
+
+            // Lọc bài tập thuộc khóa học có id = 2
+            const courseAssignments = assignments.filter(a => a.courseId === targetCourseId);
+
+            if (courseAssignments.length === 0) {
+                assignmentsContainer.innerHTML = '<p>Không có bài tập nào cho khóa học này.</p>';
+                return;
+            }
+
+            // Render bài tập với sự kiện click
+            assignmentsContainer.innerHTML = courseAssignments.map(assignment => `
+                <div class="assignment-card" onclick="viewAssignmentDetail(${assignment.id})">
+                    <h3>${assignment.title}</h3>
+                    <p>${assignment.content}</p>
+                    <small>Bài tập thuộc khóa học: ${assignment.course.name}</small>
+                </div>
+            `).join('');
+        }
+
+        renderAssignments();
+    });
+
+    // Hàm chuyển hướng đến trang chi tiết bài tập
+    function viewAssignmentDetail(assignmentId) {
+        window.location.href = `./HomeWork/BTdetail.html?id=${assignmentId}`;
+    }
+</script>
+
+<script src="../js/logout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

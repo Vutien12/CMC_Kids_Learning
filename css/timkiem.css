@@ -1,0 +1,41 @@
+#results {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; /* Đảm bảo kết quả vừa với màn hình */
+    z-index: 2; /* Đặt kết quả tìm kiếm lên trên phần quảng cáo */
+    display: flex; /* Ẩn kết quả khi chưa có dữ liệu */
+    gap: 10px;
+    background-color: transparent; /* Tạo nền mờ để dễ đọc */
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    }
+
+    .hide-ad {  
+        position: relative;
+        z-index: 1; /* Đẩy quảng cáo xuống dưới khi kết quả hiện lên */
+        filter: blur(3px); /* Làm mờ phần quảng cáo khi có kết quả */
+    }
+
+    .course-item {
+      border: 1px solid #ccc;
+      padding: 5px;
+      border-radius: 10px;
+      width: 300px;
+      box-sizing: border-box;
+      text-align: center;
+      margin-top: 5px;
+      background-color:aliceblue;
+    }
+    .course-item h3 {
+    font-size: 20px; /* Cỡ chữ tiêu đề nhỏ hơn */
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+    .course-item img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }

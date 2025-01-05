@@ -1,0 +1,14 @@
+.math-header {
+    background-color: #007bff; /* Xanh dương cho Toán */
+    border: 2px solid #1870E8;
+}
+
+.english-header {
+    background-color: #EB4235; /* Xanh lá cho Tiếng Anh */
+    border: 2px solid #EB4235;
+}
+
+.grammar-header {
+    background-color: #34AA52; /* Vàng cho Tiếng Việt */
+    border: 2px solid #34AA52;
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tìm Kiếm Khóa Học</title>
+  <style>
+    .search-result {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .course-item {
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .course-item img {
+      max-width: 100px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+<input type="text" id="searchInput" placeholder="Nhập từ khóa tìm kiếm...">
+<button onclick="searchCourses()">Tìm Kiếm</button>
+
+<div id="results" class="search-result"></div>
+
+<script>
+  async function searchCourses() {
+    const query = document.getElementById('searchInput').value;
+
+    try {
+      const response = await fetch(`https://localhost:7193/api/Course/search?query=${encodeURIComponent(query)}`);
+      if (!response.ok) {
+        throw new Error('Không thể kết nối tới API.');
+      }
+      
+      const data = await response.json();
+      displayResults(data.data.$values);
+    } catch (error) {
+      console.error('Lỗi khi tìm kiếm:', error);
+      document.getElementById('results').innerHTML = '<p>Lỗi khi tìm kiếm. Vui lòng thử lại.</p>';
+    }
+  }
+
+  function displayResults(courses) {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+
+    if (courses.length === 0) {
+      resultsDiv.innerHTML = '<p>Không tìm thấy khóa học nào.</p>';
+      return;
+    }
+
+    courses.forEach(course => {
+      const courseDiv = document.createElement('div');
+      courseDiv.className = 'course-item';
+      courseDiv.innerHTML = `
+        <img src="${course.image}" alt="${course.name}">
+        <h3>${course.name}</h3>
+        <p>${course.description}</p>
+        <p>Thể loại: ${course.category}</p>
+        <p>Giá: ${course.price} VNĐ</p>
+        <p>Số người đăng ký: ${course.numberEnrolled}</p>
+      `;
+      resultsDiv.appendChild(courseDiv);
+    });
+  }
+</script>
+
+</body>
+</html>
